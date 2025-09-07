@@ -1,29 +1,18 @@
-import django
-import os
+from .models import Library, Author, Book, Librarian
 
-# Setup Django environment (so script can run standalone)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
-django.setup()
+# 1. List all books in a library
+def list_books_in_library(library_id):
+    library = Library.objects.get(id=library_id)
+    books = library.books.all()
+    return books
 
-from relationship_app.models import Author, Book, Library, Librarian
-
-# 1. Query all books by a specific author
-author_name = "J.K. Rowling"
-author = Author.objects.get(name=author_name)
-books_by_author = Book.objects.filter(author=author)
-print(f"Books by {author_name}:")
-for book in books_by_author:
-    print(book.title)
-
-
-# 2. List all books in a library
-library_name = "Central Library"
-library = Library.objects.get(name=library_name)
-print(f"\nBooks in {library_name}:")
-for book in library.books.all():
-    print(book.title)
-
+# 2. Query all books by a specific author
+def books_by_author(author_name):
+    author = Author.objects.get(name=author_name)
+    books = author.books.all()
+    return books
 
 # 3. Retrieve the librarian for a library
-librarian = library.librarian
-print(f"\nLibrarian of {library_name}: {librarian.name}")
+def librarian_for_library(library_id):
+    library = Library.objects.get(id=library_id)
+    return library.librarian
