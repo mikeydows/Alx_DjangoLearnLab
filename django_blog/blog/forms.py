@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile
+from taggit.forms import TagWidget
 from .models import Post, Comment
 
 class CustomUserCreationForm(UserCreationForm):
@@ -49,15 +50,24 @@ class ProfileUpdateForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "content", "tags"]
+        fields = ['title', 'content', 'tags']  # include tags field
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter post title'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your post here...'}),
+            'tags': TagWidget(),  # ✅ Use TagWidget for tags input
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write a comment...'}),
+        }
 
     def clean_content(self):
         content = self.cleaned_data.get('content')
         if len(content.strip()) == 0:
             raise forms.ValidationError("Comment cannot be empty.")
+
         return content
