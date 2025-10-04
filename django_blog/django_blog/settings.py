@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'django_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_db_b',
+         'USER': 'root',       # 👈 this is the USER the test is asking for
+        'PASSWORD': 'Mickeydows@8',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',   
     }
 }
 
@@ -131,3 +135,4 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
