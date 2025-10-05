@@ -145,6 +145,7 @@ def tag_posts(request, tag_name):
     return render(request, 'blog/tag_posts.html', {'tag': tag, 'posts': posts})
 
 
+
 # --- CREATE COMMENT ---
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
@@ -184,6 +185,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
 
 
 
