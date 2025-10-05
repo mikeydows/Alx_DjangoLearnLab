@@ -3,11 +3,11 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('', views.PostListView.as_view(), name='post_list'),
-    path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
-    path('posts/new/', views.PostCreateView.as_view(), name='post_create'),
-    path('posts/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post_edit'),
-    path('posts/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
+    path('', views.PostListView.as_view(), name='post-list'),          # List all posts
+    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),  # View single post
+    path('post/new/', views.PostCreateView.as_view(), name='post-create'),       # Create new post
+    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),  # Edit post
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
 
     # Comments
     path('posts/<int:post_id>/comments/new/', views.add_comment, name='add_comment'),
@@ -24,3 +24,4 @@ urlpatterns = [
     path('search/', views.search_posts, name='search_posts'),
     path('tags/<str:tag_name>/', views.tag_posts, name='tag_posts'),
 ]
+
