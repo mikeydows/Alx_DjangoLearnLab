@@ -128,7 +128,7 @@ def comment_delete(request, post_id, comment_id):
     return redirect('post_detail', pk=post_id)
 
 def search_posts(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '')
     results = Post.objects.all()
     if query:
         results = Post.objects.filter(
@@ -136,8 +136,11 @@ def search_posts(request):
             Q(content__icontains=query) |
             Q(tags__name__icontains=query)
         ).distinct()
-    return render(request, 'blog/search_results.html', {'query': query, 'results': results})
-
+    return render(request, 'blog/search_results.html', {
+        'query': query,
+        'results': results
+    })
+    
 def tag_posts(request, tag_slug):
     tag = get_object_or_404(Tag, slug=tag_slug)
     posts = Post.objects.filter(tags__in=[tag])
@@ -184,6 +187,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
 
 
 
