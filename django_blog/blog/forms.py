@@ -29,10 +29,10 @@ class PostForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content']
+        fields = ['body']
 
-    def clean_content(self):
-        content = self.cleaned_data.get('content')
-        if not content or len(content.strip()) < 2:
-            raise forms.ValidationError("Comment must be at least 2 characters long.")
-        return content
+    def clean_body(self):
+        body = self.cleaned_data.get('body')
+        if len(body.strip()) < 5:
+            raise forms.ValidationError("Comment is too short.")
+        return body
