@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>All Blog Posts</h2>
+{% for post in object_list %}
+  <div>
+    <h3><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h3>
+    <p>By {{ post.author }} on {{ post.date_posted|date:"M d, Y" }}</p>
+  </div>
+{% empty %}
+  <p>No posts available.</p>
+{% endfor %}
+{% endblock %}
