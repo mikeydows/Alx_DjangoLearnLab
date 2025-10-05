@@ -22,7 +22,8 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
 
     # Search & Tags
-    path('tags/<str:tag_name>/', views.tag_posts, name='tag_posts'),
+    path('tags/<slug:tag_slug>/', views.tag_posts, name='tag_posts'),
     path('search/', views.search_posts, name='search_posts'),
 ]
+
 
