@@ -19,12 +19,27 @@ class ProfileForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(required=False, help_text='Comma-separated tags')
+    tags = forms.CharField(
+        required=False,
+        help_text="Add comma-separated tags (e.g., django, python, web)"
+    )
 
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
 
+    def save(self, commit=True, *args, **kwargs):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        # Handle tags manually
+        tag_names = [t.strip() for t in self.cleaned_data['tags'].split(',') if t.strip()]
+        tags = []
+        for name in tag_names:
+            tag, created = Tag.objects.get_or_create(name=name)
+            tags.append(tag)
+        instance.tags.set(tags)
+        return instance
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -36,3 +51,4 @@ class CommentForm(forms.ModelForm):
         if len(body.strip()) < 5:
             raise forms.ValidationError("Comment is too short.")
         return body
+
