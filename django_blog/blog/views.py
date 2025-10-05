@@ -90,43 +90,42 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 @login_required
-def add_comment(request, post_id):
+def comment_create(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.author = request.user
             comment.post = post
             comment.save()
-            return redirect('post_detail', pk=post_id)
+            return redirect('post_detail', pk=post.id)
     else:
         form = CommentForm()
-    return render(request, 'blog/comment_form.html', {'form': form})
+    return render(request, 'comments/comment_form.html', {'form': form, 'post': post})
 
 
 @login_required
-def edit_comment(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
-    if comment.author != request.user:
-        return redirect('post_list')
-    if request.method == 'POST':
+def comment_edit(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, post_id=post_id)
+    if request.user != comment.author:
+        return redirect('post_detail', pk=post_id)
+    if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('post_detail', pk=comment.post.pk)
+            return redirect('post_detail', pk=post_id)
     else:
         form = CommentForm(instance=comment)
-    return render(request, 'blog/comment_form.html', {'form': form})
+    return render(request, 'comments/comment_form.html', {'form': form, 'post': comment.post})
 
 
 @login_required
-def delete_comment(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
-    if comment.author == request.user:
+def comment_delete(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id, post_id=post_id)
+    if request.user == comment.author:
         comment.delete()
-    return redirect('post_detail', pk=comment.post.pk)
-
+    return redirect('post_detail', pk=post_id)
 
 def search_posts(request):
     query = request.GET.get('q', '')
@@ -181,4 +180,5 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
 
